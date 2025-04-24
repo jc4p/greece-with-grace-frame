@@ -1,13 +1,19 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --max-width: 1100px;
+  --border-radius: 12px;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f8f9fa;
+  --foreground: #3e5c76;
+  --primary-blue: #1a5f7a;
+  --light-blue: #86b3d1;
+  --accent-blue: #e3f2fd;
+  --marble-white: #ffffff;
+  --light-border: #e9ecef;
+  --font-inter: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-cinzel-decorative: Cinzel Decorative, serif;
 }
 
 html,
@@ -19,9 +25,15 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px; /* Base font size */
+}
+
+h1, h2, h3 {
+  font-family: var(--font-cinzel-decorative);
+  color: var(--primary-blue);
 }
 
 * {
@@ -31,12 +43,38 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--primary-blue);
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* Add viewport meta tag for mobile optimization */
+/* Make sure this is in your HTML head: <meta name="viewport" content="width=device-width, initial-scale=1.0"> */
+
+/* Mobile Optimization for screens less than 480px */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px; /* Slightly smaller base font size for mobile */
+  }
+
+  h1 {
+    font-size: 1.5rem; /* Smaller heading size on mobile */
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  input, select, textarea {
+    font-size: 16px !important; /* Prevent zoom on input focus on iOS */
+  }
+
+  /* Allow buttons to be fully touchable on mobile */
+  button {
+    min-height: 44px; /* Minimum touch target size */
+    padding: 8px 12px;
   }
 }

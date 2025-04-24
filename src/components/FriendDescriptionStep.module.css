@@ -1,0 +1,38 @@
+.stepContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stepTitle {
+    margin: 0 0 10px 0;
+    color: #444;
+}
+
+.label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.textarea.error {
+    border-color: red;
+    background-color: #ffeeee;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 0.85em;
+    margin-top: -10px;
+} 

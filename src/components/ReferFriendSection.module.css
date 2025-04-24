@@ -1,0 +1,57 @@
+.referSection {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 25px;
+  margin: 30px 0;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eee;
+}
+
+.referSection h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #444;
+  font-size: 1.5rem;
+}
+
+.referSection p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.referButton {
+  background-color: #8e44ad;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+}
+
+.referButton:hover {
+  background-color: #732d91;
+}
+
+.referButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .referSection {
+    padding: 20px 15px;
+  }
+  
+  .referButton {
+    width: 100%;
+  }
+} 
