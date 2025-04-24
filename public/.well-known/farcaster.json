@@ -1,0 +1,17 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjk3NzIzMywidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweGE2N0JhMDI4MTIzMWVCOUUyZWE0Y0Y5Nzg5NGMwYjBiNUI4MDFDYzYifQ",
+    "payload": "eyJkb21haW4iOiJncmVlY2Utd2l0aC1ncmFjZS5rYXNyYS5jb2RlcyJ9",
+    "signature": "MHhlYTc5NzhjZDQyYmViZTdiNmM1MjA0M2IzMGVmMDVlYjlhM2E1MzlhNjg4MTAxMjQ0MGM1OWMxYWIzNjRkZDc4N2I3ODM1ZDVjMTljYWRmMDdlODk4ODU3NmYxYzMwMzhiODliNDg1NzNlNTFjYjlmOTNiODE0MTQyNTgzNWE2ZTFj"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Greece With Grace",
+    "iconUrl": "https://cover-art.kasra.codes/greece-square.png",
+    "homeUrl": "https://greece-with-grace.kasra.codes",
+    "imageUrl": "https://cover-art.kasra.codes/greece-rectangle.png",
+    "buttonTitle": "Apply or Vote!",
+    "splashImageUrl": "https://cover-art.kasra.codes/greece-square.png",
+    "splashBackgroundColor": "#76ADC2"
+  }
+}
