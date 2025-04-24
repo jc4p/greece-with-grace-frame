@@ -3,6 +3,7 @@ import ClientSideFormSection from '../components/ClientSideFormSection';
 import ClientSideVoteButton from '../components/ClientSideVoteButton';
 import ProfileLink from '../components/ProfileLink';
 import ReferFriendSection from '../components/ReferFriendSection';
+import VotersList from '../components/VotersList';
 import styles from './page.module.css';
 
 export const metadata = {
@@ -173,30 +174,7 @@ export default async function Home() {
                     {app.votes.length > 0 && (
                       <div className={styles.votersList}>
                         <h4>Voted by:</h4>
-                        <ul className={styles.voters}>
-                          {app.votes.map(vote => (
-                            <li key={vote.id} className={styles.voter}>
-                              {vote.profile ? (
-                                <div className={styles.voterProfile}>
-                                  {vote.profile.pfpUrl && (
-                                    <img 
-                                      src={vote.profile.pfpUrl} 
-                                      alt={vote.profile.username || `FID ${vote.fid}`} 
-                                      className={styles.voterAvatar} 
-                                    />
-                                  )}
-                                  <ProfileLink 
-                                    fid={vote.fid} 
-                                    username={vote.profile.username} 
-                                    className={styles.voterName}
-                                  />
-                                </div>
-                              ) : (
-                                `FID: ${vote.fid}`
-                              )}
-                            </li>
-                          ))}
-                        </ul>
+                        <VotersList votes={app.votes} />
                       </div>
                     )}
                   </li>
