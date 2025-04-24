@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './ApplicationDetails.module.css';
 import * as frame from '@farcaster/frame-sdk';
@@ -8,6 +8,7 @@ import * as frame from '@farcaster/frame-sdk';
 export default function ApplicationDetails({ application, onClose, onViewed }) {
   const [hasViewed, setHasViewed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const contentRef = useRef(null);
   
   // Handle mounting for portal
   useEffect(() => {
@@ -15,13 +16,42 @@ export default function ApplicationDetails({ application, onClose, onViewed }) {
     return () => setMounted(false);
   }, []);
   
+  // Check if content fits without scrolling on mount and after resize
+  useEffect(() => {
+    if (!contentRef.current) return;
+    
+    // Function to check if content fits without scrolling
+    const checkIfContentFits = () => {
+      const element = contentRef.current;
+      if (!element) return;
+      
+      // If scrollHeight is equal to or less than clientHeight, content fits without scrolling
+      if (element.scrollHeight <= element.clientHeight && !hasViewed) {
+        setHasViewed(true);
+        if (onViewed) onViewed();
+      }
+    };
+    
+    // Check on mount
+    checkIfContentFits();
+    
+    // Also check on window resize
+    window.addEventListener('resize', checkIfContentFits);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfContentFits);
+    };
+  }, [hasViewed, onViewed]);
+  
   // Update the handleScroll function to properly detect when a user has viewed the content
   const handleScroll = (e) => {
+    if (hasViewed) return; // Skip if already viewed
+    
     const { scrollTop, scrollHeight, clientHeight } = e.target;
     
     // Mark as viewed when user has scrolled at least 70% through the content
     const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-    if (scrollPercentage > 0.7 && !hasViewed) {
+    if (scrollPercentage > 0.7) {
       setHasViewed(true);
       if (onViewed) onViewed();
     }
@@ -42,11 +72,7 @@ export default function ApplicationDetails({ application, onClose, onViewed }) {
       
       const finalUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(targetText)}&embeds[]=${encodeURIComponent(targetURL)}`;
       
-      try {
-        await frame.sdk.actions.openUrl(finalUrl);
-      } catch (error) {
-        await frame.sdk.actions.openUrl({ url: finalUrl });
-      }
+      await frame.sdk.actions.openUrl(finalUrl);
     } catch (error) {
       console.error('Error sharing application:', error);
     }
@@ -58,7 +84,11 @@ export default function ApplicationDetails({ application, onClose, onViewed }) {
       <div className={styles.modal}>
         <button className={styles.closeButton} onClick={onClose}>×</button>
         
-        <div className={styles.modalContent} onScroll={handleScroll}>
+        <div 
+          ref={contentRef}
+          className={styles.modalContent} 
+          onScroll={handleScroll}
+        >
           <div className={styles.applicantHeader}>
             {application.profile_picture_url && (
               <img 
@@ -88,12 +118,12 @@ export default function ApplicationDetails({ application, onClose, onViewed }) {
           </div>
           
           <div className={styles.applicationSection}>
-            <h3>Why You?</h3>
+            <h3>Why do you want to go to Greece?</h3>
             <p>{application.reasons}</p>
           </div>
           
           <div className={styles.applicationSection}>
-            <h3>What stories would you tell?</h3>
+            <h3>Tell us a story about yourself</h3>
             <p>{application.stories}</p>
           </div>
           

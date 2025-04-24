@@ -116,10 +116,16 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
     fetchUserData();
   }, [userFid]);
 
-  const handleVote = async () => {
-    // If not viewed yet, show details
-    if (!hasViewedApplication && !isSelfVote) {
-      setShowDetails(true);
+  const handleVote = async () => {    
+    // If this is a self-vote, show the share option instead
+    if (isSelfVote) {
+      handleShare();
+      return;
+    }
+    
+    // If already voted for this application, just show the details
+    if (hasVotedForThisApp) {
+      handleViewApplication();
       return;
     }
     
@@ -129,13 +135,6 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
       // Use the FID from the Frame SDK
       if (!userFid) {
         alert("You need to connect with a Farcaster account to vote.");
-        return;
-      }
-      
-      // Prevent voting for your own application
-      if (isSelfVote) {
-        // For own application, share instead of voting
-        handleShare();
         return;
       }
       
@@ -185,6 +184,7 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
       try {
         await frame.sdk.actions.openUrl(finalUrl);
       } catch (error) {
+        // Fallback for older SDK versions
         await frame.sdk.actions.openUrl({ url: finalUrl });
       }
     } catch (error) {
@@ -203,22 +203,20 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
           View
         </button>
         
-        {/* Only show vote button if this isn't self-vote and user hasn't voted for this application */}
+        {/* Vote button - for other people's applications that user hasn't already voted for */}
         {!isSelfVote && !hasVotedForThisApp && (
           <button 
             onClick={handleVote}
             className={styles.voteButton} 
-            disabled={isVoting || !userFid || isLoadingUserData || (hasViewedApplication === false)}
-            title={!userFid ? "Connect with Farcaster to vote" : 
-                   !hasViewedApplication ? "View application details first" : ""}
+            disabled={isVoting || !userFid || isLoadingUserData}
+            title={!userFid ? "Connect with Farcaster to vote" : ""}
           >
             {isVoting ? 'Voting...' : 
-             isLoadingUserData ? 'Loading...' : 
-             'Vote'}
+             isLoadingUserData ? 'Loading...' : 'Vote'}
           </button>
         )}
         
-        {/* Show share button for own application */}
+        {/* Share button - for user's own application */}
         {isSelfVote && (
           <button 
             onClick={handleShare}
@@ -228,7 +226,7 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
           </button>
         )}
         
-        {/* Show 'Voted' indicator if user already voted for this application */}
+        {/* Already voted indicator */}
         {!isSelfVote && hasVotedForThisApp && (
           <span className={styles.votedIndicator}>
             Voted ✓
@@ -240,7 +238,7 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
         <ApplicationDetails 
           application={application}
           onClose={() => setShowDetails(false)}
-          onViewed={markAsViewed}
+          onViewed={() => {}}
         />
       )}
     </>
