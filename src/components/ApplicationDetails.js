@@ -123,7 +123,7 @@ export default function ApplicationDetails({ application, onClose, onViewed }) {
           </div>
           
           <div className={styles.applicationSection}>
-            <h3>Tell us a story about yourself</h3>
+            <h3>What would you chat about?</h3>
             <p>{application.stories}</p>
           </div>
           
