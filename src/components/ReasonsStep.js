@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import WordCountTextArea from './WordCountTextArea';
 import styles from './ReasonsStep.module.css'; // Import CSS Module
 
 export default function ReasonsStep({ formData, handleChange, errors }) { // Receive errors
@@ -10,17 +11,21 @@ export default function ReasonsStep({ formData, handleChange, errors }) { // Rec
       <label htmlFor="reasons" className={styles.label}> {/* Use CSS Module */}
         Give 3 reasons why you think you'd be a great wedding date:
       </label>
-      <textarea
-        id="reasons"
+      
+      <WordCountTextArea
         name="reasons"
         value={formData.reasons}
         onChange={handleChange}
         placeholder="1. Well... "
-        required
         rows={5}
-        className={`${styles.textarea} ${errors?.reasons ? styles.error : ''}`} // Apply error class
+        maxWords={200}
+        hasError={!!errors?.reasons}
+        errorMessage={errors?.reasons}
       />
-      {errors?.reasons && <p className={styles.errorMessage}>{errors.reasons}</p>} {/* Display error */}
+      
+      <div className={styles.helperText}>
+        <p>✨ Pro tip: Quality applications with thoughtful responses get more votes!</p>
+      </div>
     </div>
   );
 }

@@ -1,9 +1,7 @@
 import { Suspense } from 'react';
 import ClientSideFormSection from '../components/ClientSideFormSection';
-import ClientSideVoteButton from '../components/ClientSideVoteButton';
-import ProfileLink from '../components/ProfileLink';
 import ReferFriendSection from '../components/ReferFriendSection';
-import VotersList from '../components/VotersList';
+import ApplicationListItem from '../components/ApplicationListItem';
 import styles from './page.module.css';
 
 export const metadata = {
@@ -26,6 +24,22 @@ export const metadata = {
     })
   }
 };
+
+// Function to check if application has short answers (all fields less than 5 words)
+function hasShortAnswers(application) {
+  const countWords = (text) => (text?.trim() ? text.trim().split(/\s+/).length : 0);
+  
+  const reasonsWordCount = countWords(application.reasons);
+  const storiesWordCount = countWords(application.stories);
+  const interestsWordCount = countWords(application.interests);
+  const friendDescriptionWordCount = countWords(application.friend_description);
+  
+  // All fields have less than 5 words
+  return reasonsWordCount < 5 && 
+         storiesWordCount < 5 && 
+         interestsWordCount < 5 && 
+         friendDescriptionWordCount < 5;
+}
 
 // Function to fetch applications data - server-side
 async function getApplications() {
@@ -61,7 +75,8 @@ async function getApplications() {
         return { 
           ...app, 
           votes, 
-          voteCount: votes.length 
+          voteCount: votes.length,
+          hasShortAnswers: hasShortAnswers(app)
         };
       })
     );
@@ -129,60 +144,49 @@ async function getApplications() {
 export default async function Home() {
   const applications = await getApplications();
   
+  // Split applications into quality and short answer applications
+  const qualityApplications = applications.filter(app => !app.hasShortAnswers);
+  const shortAnswerApplications = applications.filter(app => app.hasShortAnswers);
+  
   return (
     <main className={styles.container}>
       <h1 className={styles.header}>GREECE WITH GRACE</h1>
 
       <section className={styles.leaderboardSection}>
-        <h2>Applications</h2>
-        <Suspense fallback={<p>Loading applications...</p>}>
-          {applications.length === 0 ? (
-            <p>No applications submitted yet.</p>
+        <h2>Leaderboard</h2>
+        <Suspense fallback={<p>Loading leaderboard...</p>}>
+          {qualityApplications.length === 0 ? (
+            <p>No quality applications submitted yet.</p>
           ) : (
             <ol>
-              {applications
+              {qualityApplications
                 // Server-side sorting by vote count
                 .sort((a, b) => b.voteCount - a.voteCount)
                 .map(app => (
-                  <li key={app.id} className={styles.leaderboardItem}>
-                    <div className={styles.applicationInfo}>
-                      <div className={styles.applicantDetails}>
-                        <ProfileLink 
-                          fid={app.fid} 
-                          username={app.username} 
-                          name={app.name} 
-                          className={styles.applicantName}
-                        />
-                        {app.profile_picture_url && (
-                          <img 
-                            src={app.profile_picture_url} 
-                            alt={app.username || app.name || 'Profile'} 
-                            className={styles.applicantAvatar} 
-                          />
-                        )}
-                        <span className={styles.voteCount}>Votes: {app.voteCount}</span>
-                      </div>
-                      <div className={styles.voteButtonContainer}>
-                        <ClientSideVoteButton 
-                          appId={app.id} 
-                          applicationFid={app.fid} 
-                          application={app}
-                        />
-                      </div>
-                    </div>
-                    
-                    {app.votes.length > 0 && (
-                      <div className={styles.votersList}>
-                        <h4>Voted by:</h4>
-                        <VotersList votes={app.votes} />
-                      </div>
-                    )}
-                  </li>
+                  <ApplicationListItem key={app.id} app={app} />
                 ))}
             </ol>
           )}
         </Suspense>
       </section>
+
+      {shortAnswerApplications.length > 0 && (
+        <section className={styles.shortApplicationsSection}>
+          <details>
+            <summary className={styles.shortAppsSummary}>
+              <h3>Brief Applications ({shortAnswerApplications.length})</h3>
+            </summary>
+            
+            <ol className={styles.shortApplicationsList}>
+              {shortAnswerApplications
+                .sort((a, b) => b.voteCount - a.voteCount)
+                .map(app => (
+                  <ApplicationListItem key={app.id} app={app} />
+                ))}
+            </ol>
+          </details>
+        </section>
+      )}
 
       <ClientSideFormSection />
       <ReferFriendSection />

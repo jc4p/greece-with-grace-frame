@@ -84,4 +84,62 @@ export async function POST(request) {
       { status: 500 }
     );
   }
+}
+
+// DELETE handler for removing a vote
+export async function DELETE(request) {
+  try {
+    const { applicationId, fid } = await request.json();
+    
+    if (!applicationId || !fid) {
+      return NextResponse.json(
+        { error: 'Application ID and FID are required' },
+        { status: 400 }
+      );
+    }
+    
+    // Validate that the application exists
+    const appCheck = await sql`
+      SELECT id FROM grace_applications WHERE id = ${applicationId}
+    `;
+    
+    if (appCheck.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Application not found' },
+        { status: 404 }
+      );
+    }
+    
+    // Check if this user has voted for this application
+    const voteCheck = await sql`
+      SELECT id FROM grace_applications_votes 
+      WHERE application_id = ${applicationId} AND fid = ${fid}
+    `;
+    
+    if (voteCheck.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'No vote found for this application' },
+        { status: 404 }
+      );
+    }
+    
+    // Delete the vote
+    const { rows } = await sql`
+      DELETE FROM grace_applications_votes 
+      WHERE application_id = ${applicationId} AND fid = ${fid}
+      RETURNING id
+    `;
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Vote removed successfully',
+      deletedId: rows[0]?.id
+    });
+  } catch (error) {
+    console.error('Error removing vote:', error);
+    return NextResponse.json(
+      { error: 'Failed to remove vote' },
+      { status: 500 }
+    );
+  }
 } 

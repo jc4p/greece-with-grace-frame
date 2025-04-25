@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import WordCountTextArea from './WordCountTextArea';
 import styles from './FriendDescriptionStep.module.css'; // Import CSS Module
 
 export default function FriendDescriptionStep({ formData, handleChange, errors }) { // Receive errors
@@ -10,17 +11,17 @@ export default function FriendDescriptionStep({ formData, handleChange, errors }
       <label htmlFor="friendDescription" className={styles.label}> {/* Use CSS Module */}
         Briefly summarize how your closest friends might describe your personality:
       </label>
-      <textarea
-        id="friendDescription"
+      
+      <WordCountTextArea
         name="friendDescription"
         value={formData.friendDescription}
         onChange={handleChange}
         placeholder="e.g., Loyal, adventurous, good listener..."
-        required
         rows={5}
-        className={`${styles.textarea} ${errors?.friendDescription ? styles.error : ''}`} // Apply error class
+        maxWords={200}
+        hasError={!!errors?.friendDescription}
+        errorMessage={errors?.friendDescription}
       />
-      {errors?.friendDescription && <p className={styles.errorMessage}>{errors.friendDescription}</p>} {/* Display error */}
     </div>
   );
 }

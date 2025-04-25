@@ -77,42 +77,44 @@
 
   .applicantDetails {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    align-items: center;
+    gap: 12px;
     position: relative;
-    padding-left: 40px; /* Make space for the avatar */
     min-height: 40px;
   }
 
+  .nameAndVotes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
   .applicantAvatar {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
-    position: absolute;
-    left: 0;
-    top: 0;
     border: 1px solid #e0e0e0;
+    flex-shrink: 0;
   }
 
   .applicantName {
     font-weight: 600;
     font-size: 1.1rem;
-    margin-bottom: 0.25rem;
     color: #2a2a2a;
+    cursor: pointer;
   }
 
   .voteCount {
     color: #555;
     font-size: 0.9rem;
-    display: inline-block;
   }
 
   .voteButtonContainer {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
+    flex-shrink: 0;
+    width: auto;
     margin-left: auto;
   }
 
@@ -120,12 +122,15 @@
     background-color: #4285f4;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
     cursor: pointer;
     transition: background-color 0.2s;
     white-space: nowrap;
+    min-width: 80px;
+    max-width: 110px;
+    width: auto;
   }
 
   .voteButton:hover {
@@ -247,20 +252,156 @@
 
   .actionButtons {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
   }
 
-  .viewButton {
-    background-color: #f1f3f4;
-    color: #444;
+  .shareButton {
+    background-color: #1DA1F2;
+    color: white;
     border: none;
-    border-radius: 4px;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.9rem;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
     cursor: pointer;
     transition: background-color 0.2s;
     white-space: nowrap;
+    min-width: 80px;
+    max-width: 110px;
+    width: auto;
+  }
+
+  .shareButton:hover {
+    background-color: #0c85d0;
+  }
+
+  .votedContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  .votedIndicator {
+    background-color: #e6f4ea;
+    color: #137333;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    border: 1px solid #d4edda;
+    min-width: 80px;
+    max-width: 110px;
+    width: auto;
+    text-align: center;
+  }
+
+  .shortApplicationsSection {
+    margin: 1.5rem 0;
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #eee;
+  }
+
+  .shortAppsSummary {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f1f3f4;
+    display: flex;
+    align-items: center;
+    user-select: none;
+  }
+
+  .shortAppsSummary:hover {
+    background-color: #e3e5e7;
+  }
+
+  .shortAppsSummary h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #555;
+    font-weight: 500;
+  }
+
+  .shortApplicationsList {
+    list-style: decimal inside;
+    padding-left: 5px;
+    margin-top: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Mobile styles */
+  @media (max-width: 600px) {
+    .shortApplicationsSection {
+      margin: 1rem 0;
+      padding: 0.3rem;
+    }
+    
+    .shortAppsSummary {
+      padding: 8px;
+    }
+    
+    .shortAppsSummary h3 {
+      font-size: 1rem;
+    }
+    
+    .shortApplicationsList {
+      padding-left: 2px;
+    }
+
+    .applicationInfo {
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .applicantDetails {
+      width: 100%;
+    }
+
+    .voteButtonContainer {
+      width: 100%;
+    }
+
+    .actionButtons {
+      width: 100%;
+      padding: 8px 0;
+    }
+
+    .viewButton, .voteButton, .shareButton, .votedIndicator {
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      min-height: 44px;
+      touch-action: manipulation;
+      max-width: 100px;
+    }
+    
+    .viewButton {
+      min-width: 80px;
+      max-width: 100px;
+    }
+    
+    .voteButton, .shareButton, .votedIndicator {
+      min-width: 80px;
+      max-width: 110px;
+      margin-left: auto;
+    }
+
+    .votedContainer {
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+  }
+
+  .cardHeader {
+    display: none;
   }
 
   .viewButton:hover {
@@ -273,28 +414,51 @@
     cursor: not-allowed;
   }
 
-  .shareButton {
-    background-color: #1DA1F2;
+  .undoButton {
+    background-color: #f44336;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: background-color 0.2s;
     white-space: nowrap;
+    min-width: 60px;
+    max-width: 80px;
+    width: auto;
   }
 
-  .shareButton:hover {
-    background-color: #0c85d0;
+  .undoButton:hover {
+    background-color: #d32f2f;
   }
 
-  .votedIndicator {
-    background-color: #e6f4ea;
-    color: #137333;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+  .undoButton:disabled {
+    background-color: #e57373;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 600px) {
+    .undoButton {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.85rem;
+      min-height: 32px;
+      touch-action: manipulation;
+      max-width: 70px;
+    }
+  }
+
+  .viewButton {
+    background-color: #f1f3f4;
+    color: #444;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
     white-space: nowrap;
-    border: 1px solid #d4edda;
+    min-width: 80px;
+    max-width: 100px;
+    width: auto;
   }

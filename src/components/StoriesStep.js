@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import WordCountTextArea from './WordCountTextArea';
 import styles from './StoriesStep.module.css';
 
 export default function StoriesStep({ formData, handleChange, errors }) {
@@ -10,17 +11,21 @@ export default function StoriesStep({ formData, handleChange, errors }) {
       <label htmlFor="stories" className={styles.label}>
         Imagine you're going circle to circle at a party, what are some stories you would tell?
       </label>
-      <textarea
-        id="stories"
+      
+      <WordCountTextArea
         name="stories"
         value={formData.stories}
         onChange={handleChange}
         placeholder="Summarize a few captivating stories here..."
-        required
         rows={5}
-        className={`${styles.textarea} ${errors?.stories ? styles.error : ''}`}
+        maxWords={200}
+        hasError={!!errors?.stories}
+        errorMessage={errors?.stories}
       />
-      {errors?.stories && <p className={styles.errorMessage}>{errors.stories}</p>}
+      
+      <div className={styles.helperText}>
+        <p>✨ Pro tip: Interesting stories help your application stand out!</p>
+      </div>
     </div>
   );
 } 

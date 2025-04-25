@@ -30,16 +30,42 @@ export default function MultiStepForm({ onSubmit }) {
   // Basic validation logic (can be expanded)
   const validateStep = () => {
     const newErrors = {};
+    const countWords = (text) => (text?.trim() ? text.trim().split(/\s+/).length : 0);
+
     // Simple required validation for current step's fields
     switch (currentStep) {
       case 1: if (!formData.name.trim()) newErrors.name = 'Name is required'; break;
       case 2: if (!formData.age) newErrors.age = 'Age is required'; else if (parseInt(formData.age) < 18) newErrors.age = 'Must be 18 or older'; break;
       case 3: if (!formData.location.trim()) newErrors.location = 'Location is required'; break;
       case 4: if (formData.hasPassport === null) newErrors.hasPassport = 'Passport selection is required'; break;
-      case 5: if (!formData.reasons.trim()) newErrors.reasons = 'Reasons are required'; break;
-      case 6: if (!formData.interests.trim()) newErrors.interests = 'Interests are required'; break;
-      case 7: if (!formData.stories.trim()) newErrors.stories = 'Stories summary is required'; break;
-      case 8: if (!formData.friendDescription.trim()) newErrors.friendDescription = 'Friend description is required'; break;
+      case 5: 
+        if (!formData.reasons.trim()) {
+          newErrors.reasons = 'Reasons are required';
+        } else if (countWords(formData.reasons) < 5) {
+          newErrors.reasons = 'Please write at least 5 words';
+        }
+        break;
+      case 6: 
+        if (!formData.interests.trim()) {
+          newErrors.interests = 'Interests are required';
+        } else if (countWords(formData.interests) < 5) {
+          newErrors.interests = 'Please write at least 5 words';
+        } 
+        break;
+      case 7: 
+        if (!formData.stories.trim()) {
+          newErrors.stories = 'Stories summary is required';
+        } else if (countWords(formData.stories) < 5) {
+          newErrors.stories = 'Please write at least 5 words';
+        }
+        break;
+      case 8: 
+        if (!formData.friendDescription.trim()) {
+          newErrors.friendDescription = 'Friend description is required';
+        } else if (countWords(formData.friendDescription) < 5) {
+          newErrors.friendDescription = 'Please write at least 5 words';
+        }
+        break;
       default: break;
     }
     setErrors(newErrors);

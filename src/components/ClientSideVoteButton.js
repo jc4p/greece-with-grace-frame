@@ -7,6 +7,7 @@ import * as frame from '@farcaster/frame-sdk';
 
 export default function ClientSideVoteButton({ appId, applicationFid, application }) {
   const [isVoting, setIsVoting] = useState(false);
+  const [isUndoing, setIsUndoing] = useState(false);
   const [userFid, setUserFid] = useState(null);
   const [userData, setUserData] = useState(null);
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
@@ -170,6 +171,44 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
     }
   };
   
+  const handleUndoVote = async () => {
+    if (!hasVotedForThisApp || !userFid) return;
+    
+    setIsUndoing(true);
+    
+    try {
+      // Get base URL from environment
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      
+      const response = await fetch(`${baseUrl}/api/votes`, { 
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          applicationId: appId,
+          fid: userFid
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to remove vote');
+      }
+      
+      // Update local state
+      setHasVotedForThisApp(false);
+      
+      // Force a refresh of the page to show updated data
+      window.location.reload();
+    } catch (error) {
+      console.error("Error removing vote:", error);
+      alert(`Removing vote failed: ${error.message}`);
+    } finally {
+      setIsUndoing(false);
+    }
+  };
+  
   const handleViewApplication = () => {
     setShowDetails(true);
   };
@@ -226,11 +265,20 @@ export default function ClientSideVoteButton({ appId, applicationFid, applicatio
           </button>
         )}
         
-        {/* Already voted indicator */}
+        {/* Already voted indicator with undo option */}
         {!isSelfVote && hasVotedForThisApp && (
-          <span className={styles.votedIndicator}>
-            Voted ✓
-          </span>
+          <div className={styles.votedContainer}>
+            <span className={styles.votedIndicator}>
+              Voted ✓
+            </span>
+            <button 
+              onClick={handleUndoVote}
+              className={styles.undoButton}
+              disabled={isUndoing}
+            >
+              {isUndoing ? 'Removing...' : 'Undo'}
+            </button>
+          </div>
         )}
       </div>
       

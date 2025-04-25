@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import WordCountTextArea from './WordCountTextArea';
 import styles from './InterestsStep.module.css';
 
 export default function InterestsStep({ formData, handleChange, errors }) {
@@ -10,17 +11,17 @@ export default function InterestsStep({ formData, handleChange, errors }) {
       <label htmlFor="interests" className={styles.label}>
         List some of your hobbies and interests (e.g., hiking, coding, ancient history, cooking):
       </label>
-      <textarea
-        id="interests"
+      
+      <WordCountTextArea
         name="interests"
         value={formData.interests}
         onChange={handleChange}
         placeholder="Your interests go here..."
-        required
         rows={5}
-        className={`${styles.textarea} ${errors?.interests ? styles.error : ''}`}
+        maxWords={200}
+        hasError={!!errors?.interests}
+        errorMessage={errors?.interests}
       />
-      {errors?.interests && <p className={styles.errorMessage}>{errors.interests}</p>}
     </div>
   );
 } 
